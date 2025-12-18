@@ -29,8 +29,7 @@ return assetRepository.save(asset);
 
 @Override
 public Asset getAsset(Long id) {
-return assetRepository.findById(id)
-.orElseThrow(() -> new ResourceNotFoundException("Asset not found"));
+return assetRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Asset not found"));
 }
 
 
