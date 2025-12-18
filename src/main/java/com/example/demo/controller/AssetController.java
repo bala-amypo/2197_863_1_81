@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 import com.example.demo.entity.Asset;
-//import com.example.demo.dto.AssetStatusUpdateRequest;
+import com.example.demo.dto.AssetStatusUpdateRequest;
 import com.example.demo.service.AssetService;
 
 
