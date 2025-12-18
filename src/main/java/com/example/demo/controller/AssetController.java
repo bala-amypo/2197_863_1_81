@@ -50,5 +50,6 @@ return assetService.getAsset(id);
 @PutMapping("/status/{id}")
 public Asset updateStatus(@PathVariable Long id, @RequestBody AssetStatusUpdateRequest request) {
    return assetService.updateStatus(id, request.getStatus());
+   //return assetService.updateStatus(id, request.getStatus());
 }
 }
