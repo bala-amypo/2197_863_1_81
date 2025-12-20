@@ -28,7 +28,14 @@ public class DisposalRecord {
 
     private LocalDateTime createdAt;
 
-    // Default constructor
+    @PrePersist
+    public void prePersist() {
+        if (this.createdAt == null) {
+            this.createdAt = LocalDateTime.now();
+        }
+    }
+
+    // No-arg constructor
     public DisposalRecord() {
     }
 
@@ -45,40 +52,24 @@ public class DisposalRecord {
         this.createdAt = createdAt;
     }
 
-    @PrePersist
-    public void prePersist() {
-        if (this.createdAt == null) {
-            this.createdAt = LocalDateTime.now();
-        }
-    }
-
     // Getters & Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public Asset getAsset() { return asset; }
-    public void setAsset(Asset asset) { this.asset = asset; }
-
-    public String getDisposalMethod() { return disposalMethod; }
-    public void setDisposalMethod(String disposalMethod) {
-        this.disposalMethod = disposalMethod;
+    public Long getId() {
+        return id;
     }
 
-    public LocalDate getDisposalDate() { return disposalDate; }
-    public void setDisposalDate(LocalDate disposalDate) {
-        this.disposalDate = disposalDate;
+    public LocalDate getDisposalDate() {
+        return disposalDate;
     }
 
-    public User getApprovedBy() { return approvedBy; }
+    public User getApprovedBy() {
+        return approvedBy;
+    }
+
+    public void setAsset(Asset asset) {
+        this.asset = asset;
+    }
+
     public void setApprovedBy(User approvedBy) {
         this.approvedBy = approvedBy;
-    }
-
-    public String getNotes() { return notes; }
-    public void setNotes(String notes) { this.notes = notes; }
-
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
     }
 }

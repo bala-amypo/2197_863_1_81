@@ -5,14 +5,8 @@ public class LoginRequest {
     private String email;
     private String password;
 
-    // Default constructor
+    // No-arg constructor
     public LoginRequest() {
-    }
-
-    // Parameterized constructor
-    public LoginRequest(String email, String password) {
-        this.email = email;
-        this.password = password;
     }
 
     // Getters & Setters

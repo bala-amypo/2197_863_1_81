@@ -25,14 +25,21 @@ public class LifecycleEvent {
     @JoinColumn(name = "performed_by")
     private User performedBy;
 
-    // Default constructor
+    @PrePersist
+    public void prePersist() {
+        if (this.eventDate == null) {
+            this.eventDate = LocalDateTime.now();
+        }
+    }
+
+    // No-arg constructor
     public LifecycleEvent() {
     }
 
     // Parameterized constructor
     public LifecycleEvent(Long id, Asset asset, String eventType,
-                          String eventDescription, LocalDateTime eventDate,
-                          User performedBy) {
+                          String eventDescription,
+                          LocalDateTime eventDate, User performedBy) {
         this.id = id;
         this.asset = asset;
         this.eventType = eventType;
@@ -41,35 +48,28 @@ public class LifecycleEvent {
         this.performedBy = performedBy;
     }
 
-    @PrePersist
-    public void prePersist() {
-        if (this.eventDate == null) {
-            this.eventDate = LocalDateTime.now();
-        }
-    }
-
     // Getters & Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public Asset getAsset() { return asset; }
-    public void setAsset(Asset asset) { this.asset = asset; }
-
-    public String getEventType() { return eventType; }
-    public void setEventType(String eventType) { this.eventType = eventType; }
-
-    public String getEventDescription() { return eventDescription; }
-    public void setEventDescription(String eventDescription) {
-        this.eventDescription = eventDescription;
+    public Long getId() {
+        return id;
     }
 
-    public LocalDateTime getEventDate() { return eventDate; }
-    public void setEventDate(LocalDateTime eventDate) {
-        this.eventDate = eventDate;
+    public Asset getAsset() {
+        return asset;
     }
 
-    public User getPerformedBy() { return performedBy; }
-    public void setPerformedBy(User performedBy) {
-        this.performedBy = performedBy;
+    public void setAsset(Asset asset) {
+        this.asset = asset;
+    }
+
+    public String getEventType() {
+        return eventType;
+    }
+
+    public String getEventDescription() {
+        return eventDescription;
+    }
+
+    public User getPerformedBy() {
+        return performedBy;
     }
 }

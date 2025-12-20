@@ -1,34 +1,46 @@
 package com.example.demo.dto;
 
-public class AuthResponse {
+public class RegisterRequest {
 
-    private String token;
-    private String message;
+    private String fullName;
+    private String email;
+    private String department;
+    private String password;
 
-    // Default constructor
-    public AuthResponse() {
-    }
-
-    // Parameterized constructor
-    public AuthResponse(String token, String message) {
-        this.token = token;
-        this.message = message;
+    // No-arg constructor
+    public RegisterRequest() {
     }
 
     // Getters & Setters
-    public String getToken() {
-        return token;
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getEmail() {
+        return email;
     }
  
-    public void setToken(String token) {
-        this.token = token;
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getDepartment() {
+        return department;
     }
  
-    public String getMessage() {
-        return message;
+    public void setDepartment(String department) {
+        this.department = department;
     }
  
-    public void setMessage(String message) {
-        this.message = message;
+    public String getPassword() {
+        return password;
+    }
+ 
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

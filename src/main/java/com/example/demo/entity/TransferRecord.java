@@ -25,7 +25,7 @@ public class TransferRecord {
     @JoinColumn(name = "approved_by")
     private User approvedBy;
 
-    // Default constructor
+    // No-arg constructor
     public TransferRecord() {
     }
 
@@ -41,29 +41,31 @@ public class TransferRecord {
         this.approvedBy = approvedBy;
     }
 
-    // Getters & Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public Asset getAsset() { return asset; }
-    public void setAsset(Asset asset) { this.asset = asset; }
-
-    public String getFromDepartment() { return fromDepartment; }
-    public void setFromDepartment(String fromDepartment) {
-        this.fromDepartment = fromDepartment;
+    // Getters
+    public Long getId() {
+        return id;
     }
 
-    public String getToDepartment() { return toDepartment; }
-    public void setToDepartment(String toDepartment) {
-        this.toDepartment = toDepartment;
+    public String getFromDepartment() {
+        return fromDepartment;
     }
 
-    public LocalDate getTransferDate() { return transferDate; }
-    public void setTransferDate(LocalDate transferDate) {
-        this.transferDate = transferDate;
+    public String getToDepartment() {
+        return toDepartment;
     }
 
-    public User getApprovedBy() { return approvedBy; }
+    public LocalDate getTransferDate() {
+        return transferDate;
+    }
+
+    public User getApprovedBy() {
+        return approvedBy;
+    }
+
+    public void setAsset(Asset asset) {
+        this.asset = asset;
+    }
+
     public void setApprovedBy(User approvedBy) {
         this.approvedBy = approvedBy;
     }
