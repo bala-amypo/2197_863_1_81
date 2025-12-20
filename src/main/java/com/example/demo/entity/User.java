@@ -28,20 +28,21 @@ public class User {
     @OneToMany(mappedBy = "currentHolder")
     private List<Asset> assets;
 
-    @OneToMany(mappedBy = "performedBy")
-    private List<LifecycleEvent> lifecycleEvents;
+    @PrePersist
+    public void prePersist() {
+        if (this.role == null) {
+            this.role = "USER";
+        }
+        if (this.createdAt == null) {
+            this.createdAt = LocalDateTime.now();
+        }
+    }
 
-    @OneToMany(mappedBy = "approvedBy")
-    private List<TransferRecord> transferRecords;
-
-    @OneToMany(mappedBy = "approvedBy")
-    private List<DisposalRecord> disposalRecords;
-
-    // ✅ Default constructor
+    // No-arg constructor
     public User() {
     }
 
-    // ✅ Parameterized constructor
+    // Parameterized constructor
     public User(Long id, String fullName, String email, String department,
                 String role, String password, LocalDateTime createdAt) {
         this.id = id;
@@ -53,18 +54,7 @@ public class User {
         this.createdAt = createdAt;
     }
 
-    @PrePersist
-    public void prePersist() {
-        if (this.role == null) {
-            this.role = "USER";
-        }
-        if (this.createdAt == null) {
-            this.createdAt = LocalDateTime.now();
-        }
-    }
-
-    // 🔹 Getters & Setters
-
+    // Getters & Setters
     public Long getId() {
         return id;
     }
@@ -112,12 +102,8 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
- 
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
-    }
- 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
     }
 }

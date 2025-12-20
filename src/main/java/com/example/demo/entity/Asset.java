@@ -13,7 +13,7 @@ public class Asset {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true)
     private String assetTag;
 
     private String assetType;
@@ -39,24 +39,6 @@ public class Asset {
     @OneToMany(mappedBy = "asset")
     private List<DisposalRecord> disposalRecords;
 
-    // ✅ Default constructor
-    public Asset() {
-    }
-
-    // ✅ Parameterized constructor
-    public Asset(Long id, String assetTag, String assetType, String model,
-                 LocalDate purchaseDate, String status, User currentHolder,
-                 LocalDateTime createdAt) {
-        this.id = id;
-        this.assetTag = assetTag;
-        this.assetType = assetType;
-        this.model = model;
-        this.purchaseDate = purchaseDate;
-        this.status = status;
-        this.currentHolder = currentHolder;
-        this.createdAt = createdAt;
-    }
-
     @PrePersist
     public void prePersist() {
         if (this.status == null) {
@@ -67,14 +49,27 @@ public class Asset {
         }
     }
 
-    // 🔹 Getters & Setters
-
-    public Long getId() {
-        return id;
+    // No-arg constructor
+    public Asset() {
     }
 
-    public void setId(Long id) {
+    // Parameterized constructor
+    public Asset(Long id, String assetTag, String assetType, String model,
+                 LocalDate purchaseDate, String status,
+                 User currentHolder, LocalDateTime createdAt) {
         this.id = id;
+        this.assetTag = assetTag;
+        this.assetType = assetType;
+        this.model = model;
+        this.purchaseDate = purchaseDate;
+        this.status = status;
+        this.currentHolder = currentHolder;
+        this.createdAt = createdAt;
+    }
+
+    // Getters & Setters
+    public Long getId() {
+        return id;
     }
 
     public String getAssetTag() {
@@ -123,13 +118,5 @@ public class Asset {
 
     public void setCurrentHolder(User currentHolder) {
         this.currentHolder = currentHolder;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
     }
 }
