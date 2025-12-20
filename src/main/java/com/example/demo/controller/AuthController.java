@@ -7,6 +7,9 @@ import com.example.demo.security.JwtUtil;
 import com.example.demo.service.UserService;
 import org.springframework.security.authentication.*;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+
 
 import java.util.HashMap;
 import java.util.Map;
