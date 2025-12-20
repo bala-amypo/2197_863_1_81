@@ -7,7 +7,7 @@ public interface UserService {
 
     User registerUser(User user);
 
-    User getUser(Long id);
+    User getUserById(Long id);
 
     List<User> getAllUsers();
 }

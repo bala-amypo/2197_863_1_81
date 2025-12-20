@@ -16,10 +16,15 @@ public class DisposalRecordController {
         this.disposalRecordService = disposalRecordService;
     }
 
-    @PostMapping
-    public DisposalRecord createDisposal(@RequestBody DisposalRecord record) {
-        return disposalRecordService.createDisposal(record);
-    }
+    // @PostMapping
+    // public DisposalRecord createDisposal(@RequestBody DisposalRecord record) {
+    //     return disposalRecordService.createDisposal(record);
+    // }
+     @PostMapping("/{assetId}")
+     public DisposalRecord createDisposal(@PathVariable Long assetId, @RequestBody DisposalRecord record) {
+            return disposalRecordService.createDisposal(assetId, record);
+      }
+
 
     @GetMapping
     public List<DisposalRecord> getAllDisposals() {
