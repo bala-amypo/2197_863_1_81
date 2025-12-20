@@ -1,3 +1,11 @@
+package com.example.demo.controller;
+
+import com.example.demo.entity.LifecycleEvent;
+import com.example.demo.service.LifecycleEventService;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/lifecycle-events")
 public class LifecycleEventController {
