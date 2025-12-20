@@ -69,7 +69,14 @@ public class LifecycleEvent {
         return eventDescription;
     }
 
+    // public User getPerformedBy() {
+    //     return performedBy;
+    // }
     public User getPerformedBy() {
-        return performedBy;
-    }
+    return performedBy;
+}
+
+public void setPerformedBy(User performedBy) {
+    this.performedBy = performedBy;
+}
 }
