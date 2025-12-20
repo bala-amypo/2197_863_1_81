@@ -16,10 +16,15 @@ public class TransferRecordController {
         this.transferRecordService = transferRecordService;
     }
 
-    @PostMapping
-    public TransferRecord createTransfer(@RequestBody TransferRecord record) {
-        return transferRecordService.createTransfer(record);
+    // @PostMapping
+    // public TransferRecord createTransfer(@RequestBody TransferRecord record) {
+    //     return transferRecordService.createTransfer(record);
+    // }
+    @PostMapping("/{assetId}")
+    public TransferRecord createTransfer(@PathVariable Long assetId, @RequestBody TransferRecord record) {
+           return transferRecordService.createTransfer(assetId, record);
     }
+
 
     @GetMapping
     public List<TransferRecord> getAllTransfers() {
