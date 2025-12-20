@@ -3,13 +3,11 @@ package com.example.demo.controller;
 import com.example.demo.dto.LoginRequest;
 import com.example.demo.dto.RegisterRequest;
 import com.example.demo.entity.User;
-import com.example.demo.security.JwtUtil;
 import com.example.demo.service.UserService;
-import org.springframework.security.authentication.*;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,14 +18,11 @@ public class AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
-    private final JwtUtil jwtUtil;
 
     public AuthController(AuthenticationManager authenticationManager,
-                          UserService userService,
-                          JwtUtil jwtUtil) {
+                          UserService userService) {
         this.authenticationManager = authenticationManager;
         this.userService = userService;
-        this.jwtUtil = jwtUtil;
     }
 
     @PostMapping("/register")
@@ -45,23 +40,29 @@ public class AuthController {
     @PostMapping("/login")
     public Map<String, String> login(@RequestBody LoginRequest request) {
 
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword())
-        );
+        try {
+            // Authenticate user
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getEmail(),
+                            request.getPassword())
+            );
+        } catch (BadCredentialsException e) {
+            throw new RuntimeException("Invalid credentials");
+        }
 
+        // Get user details
         User user = userService
                 .getAllUsers()
                 .stream()
                 .filter(u -> u.getEmail().equals(request.getEmail()))
                 .findFirst()
-                .orElseThrow();
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-        String token = jwtUtil.generateTokenForUser(user);
-
+        // Instead of JWT, just return a simple success message
         Map<String, String> response = new HashMap<>();
-        response.put("token", token);
+        response.put("message", "Login successful");
+        response.put("email", user.getEmail());
 
         return response;
     }
