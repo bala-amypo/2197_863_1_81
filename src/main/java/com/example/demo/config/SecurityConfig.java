@@ -89,9 +89,10 @@ public class SecurityConfig {
                         "/error",                // allow error page
                         "/auth/**",              // login/register
                         "/swagger-ui/**",        // swagger UI
-                        "/v3/api-docs/**"        // swagger docs
+                        "/v3/api-docs/**",
+                        "/api/**"        // swagger docs
                 ).permitAll()
-                .anyRequest().authenticated()
+                // .anyRequest().authenticated()
             );
 
         return http.build();
