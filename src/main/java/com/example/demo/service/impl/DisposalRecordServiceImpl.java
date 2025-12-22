@@ -4,11 +4,11 @@ import com.example.demo.entity.Asset;
 import com.example.demo.entity.DisposalRecord;
 import com.example.demo.entity.User;
 import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.exception.ValidationException;
 import com.example.demo.repository.AssetRepository;
 import com.example.demo.repository.DisposalRecordRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.DisposalRecordService;
+import jakarta.validation.ValidationException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -35,6 +35,10 @@ public class DisposalRecordServiceImpl implements DisposalRecordService {
         Asset asset = assetRepository.findById(assetId)
                 .orElseThrow(() -> new ResourceNotFoundException("Asset not found"));
 
+        if (disposal.getApprovedBy() == null || disposal.getApprovedBy().getId() == null) {
+            throw new ResourceNotFoundException("User not found");
+        }
+
         User approver = userRepository.findById(disposal.getApprovedBy().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
@@ -49,12 +53,12 @@ public class DisposalRecordServiceImpl implements DisposalRecordService {
         disposal.setAsset(asset);
         disposal.setApprovedBy(approver);
 
-        DisposalRecord saved = disposalRecordRepository.save(disposal);
+        DisposalRecord savedRecord = disposalRecordRepository.save(disposal);
 
         asset.setStatus("DISPOSED");
         assetRepository.save(asset);
 
-        return saved;
+        return savedRecord;
     }
 
     @Override

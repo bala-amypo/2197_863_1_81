@@ -4,13 +4,12 @@ import com.example.demo.entity.Asset;
 import com.example.demo.entity.LifecycleEvent;
 import com.example.demo.entity.User;
 import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.exception.ValidationException;
 import com.example.demo.repository.AssetRepository;
 import com.example.demo.repository.LifecycleEventRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.LifecycleEventService;
+import jakarta.validation.ValidationException;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
@@ -30,17 +29,14 @@ public class LifecycleEventServiceImpl implements LifecycleEventService {
 
     @Override
     public LifecycleEvent logEvent(Long assetId, Long userId, LifecycleEvent event) {
-
         Asset asset = assetRepository.findById(assetId)
                 .orElseThrow(() -> new ResourceNotFoundException("Asset not found"));
-
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         if (event.getEventType() == null) {
-            throw new ValidationException("Event type is required");
+            throw new ValidationException("Event type must not be null");
         }
-
         if (event.getEventDescription() == null || event.getEventDescription().isEmpty()) {
             throw new ValidationException("Event description must not be empty");
         }
@@ -59,6 +55,6 @@ public class LifecycleEventServiceImpl implements LifecycleEventService {
     @Override
     public LifecycleEvent getEvent(Long id) {
         return lifecycleEventRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Lifecycle event not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("LifecycleEvent not found"));
     }
 }
