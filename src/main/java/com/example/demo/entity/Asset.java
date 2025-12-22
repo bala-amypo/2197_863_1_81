@@ -6,16 +6,21 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "assets")
-public class Asset {
+@Table(
+    name = "assets",
+    uniqueConstraints = @UniqueConstraint(columnNames = "assetTag")
+)
+public class Asset
+{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String assetTag;
 
+    @Column(nullable = false)
     private String assetType;
 
     private String model;
@@ -25,7 +30,7 @@ public class Asset {
     private String status;
 
     @ManyToOne
-    @JoinColumn(name = "current_holder_id")
+    @JoinColumn(name = "current_holder")
     private User currentHolder;
 
     private LocalDateTime createdAt;
@@ -36,28 +41,23 @@ public class Asset {
     @OneToMany(mappedBy = "asset")
     private List<TransferRecord> transferRecords;
 
-    @OneToMany(mappedBy = "asset")
-    private List<DisposalRecord> disposalRecords;
+    @OneToOne(mappedBy = "asset")
+    private DisposalRecord disposalRecord;
 
-    @PrePersist
-    public void prePersist() {
-        if (this.status == null) {
-            this.status = "AVAILABLE";
-        }
-        if (this.createdAt == null) {
-            this.createdAt = LocalDateTime.now();
-        }
+    public Asset()
+    {
     }
 
-    // No-arg constructor
-    public Asset() {
-    }
-
-    // Parameterized constructor
-    public Asset(Long id, String assetTag, String assetType, String model,
-                 LocalDate purchaseDate, String status,
-                 User currentHolder, LocalDateTime createdAt) {
-        this.id = id;
+    public Asset(
+            String assetTag,
+            String assetType,
+            String model,
+            LocalDate purchaseDate,
+            String status,
+            User currentHolder,
+            LocalDateTime createdAt
+    )
+    {
         this.assetTag = assetTag;
         this.assetType = assetType;
         this.model = model;
@@ -67,56 +67,97 @@ public class Asset {
         this.createdAt = createdAt;
     }
 
-    // Getters & Setters
-    public Long getId() {
+    @PrePersist
+    public void prePersist()
+    {
+        if (this.status == null)
+        {
+            this.status = "AVAILABLE";
+        }
+
+        if (this.createdAt == null)
+        {
+            this.createdAt = LocalDateTime.now();
+        }
+    }
+
+    public Long getId()
+    {
         return id;
     }
 
-    public String getAssetTag() {
+    public void setId(Long id)
+    {
+        this.id = id;
+    }
+
+    public String getAssetTag()
+    {
         return assetTag;
     }
 
-    public void setAssetTag(String assetTag) {
+    public void setAssetTag(String assetTag)
+    {
         this.assetTag = assetTag;
     }
 
-    public String getAssetType() {
+    public String getAssetType()
+    {
         return assetType;
     }
 
-    public void setAssetType(String assetType) {
+    public void setAssetType(String assetType)
+    {
         this.assetType = assetType;
     }
 
-    public String getModel() {
+    public String getModel()
+    {
         return model;
     }
 
-    public void setModel(String model) {
+    public void setModel(String model)
+    {
         this.model = model;
     }
 
-    public LocalDate getPurchaseDate() {
+    public LocalDate getPurchaseDate()
+    {
         return purchaseDate;
     }
 
-    public void setPurchaseDate(LocalDate purchaseDate) {
+    public void setPurchaseDate(LocalDate purchaseDate)
+    {
         this.purchaseDate = purchaseDate;
     }
 
-    public String getStatus() {
+    public String getStatus()
+    {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(String status)
+    {
         this.status = status;
     }
 
-    public User getCurrentHolder() {
+    public User getCurrentHolder()
+    {
         return currentHolder;
     }
 
-    public void setCurrentHolder(User currentHolder) {
+    public void setCurrentHolder(User currentHolder)
+    {
         this.currentHolder = currentHolder;
+    }
+
+    public LocalDateTime getCreatedAt()
+    {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt)
+    {
+        this.createdAt = createdAt;
     }
 }

@@ -1,8 +1,8 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.AssetStatusUpdateRequest;
 import com.example.demo.entity.Asset;
 import com.example.demo.service.AssetService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,23 +18,24 @@ public class AssetController {
     }
 
     @PostMapping
-    public Asset create(@RequestBody Asset asset) {
-        return assetService.createAsset(asset);
-    }
-
-    @GetMapping
-    public List<Asset> getAll() {
-        return assetService.getAllAssets();
+    public ResponseEntity<Asset> createAsset(@RequestBody Asset asset) {
+        return ResponseEntity.ok(assetService.createAsset(asset));
     }
 
     @GetMapping("/{id}")
-    public Asset getById(@PathVariable Long id) {
-        return assetService.getAsset(id);
+    public ResponseEntity<Asset> getAsset(@PathVariable Long id) {
+        return ResponseEntity.ok(assetService.getAsset(id));
     }
 
-    @PutMapping("/status/{id}")
-    public Asset updateStatus(@PathVariable Long id,
-                              @RequestBody AssetStatusUpdateRequest request) {
-        return assetService.updateStatus(id, request.getStatus());
+    @GetMapping
+    public ResponseEntity<List<Asset>> getAllAssets() {
+        return ResponseEntity.ok(assetService.getAllAssets());
     }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<Asset> updateStatus(@PathVariable Long id,
+                                              @RequestParam String status) {
+        return ResponseEntity.ok(assetService.updateStatus(id, status));
+    }
+
 }
