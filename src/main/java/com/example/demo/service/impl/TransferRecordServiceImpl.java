@@ -4,11 +4,11 @@ import com.example.demo.entity.Asset;
 import com.example.demo.entity.TransferRecord;
 import com.example.demo.entity.User;
 import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.exception.ValidationException;
 import com.example.demo.repository.AssetRepository;
 import com.example.demo.repository.TransferRecordRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.TransferRecordService;
-import jakarta.validation.ValidationException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -35,10 +35,6 @@ public class TransferRecordServiceImpl implements TransferRecordService {
         Asset asset = assetRepository.findById(assetId)
                 .orElseThrow(() -> new ResourceNotFoundException("Asset not found"));
 
-        if (record.getApprovedBy() == null || record.getApprovedBy().getId() == null) {
-            throw new ResourceNotFoundException("User not found");
-        }
-
         User approver = userRepository.findById(record.getApprovedBy().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
@@ -46,8 +42,8 @@ public class TransferRecordServiceImpl implements TransferRecordService {
             throw new ValidationException("Approver must be ADMIN");
         }
 
-        if (record.getFromDepartment().equalsIgnoreCase(record.getToDepartment())) {
-            throw new ValidationException("From department and To department must differ");
+        if (record.getFromDepartment().equals(record.getToDepartment())) {
+            throw new ValidationException("From and To departments must differ");
         }
 
         if (record.getTransferDate().isAfter(LocalDate.now())) {
