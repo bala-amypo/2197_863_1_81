@@ -26,6 +26,7 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    // 🔥 REQUIRED for /auth/login
     @Bean
     public AuthenticationManager authenticationManager(
             AuthenticationConfiguration configuration) throws Exception {
@@ -38,7 +39,6 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                // 🔓 VERY IMPORTANT (THIS FIXES YOUR 403)
                 .requestMatchers(
                         "/",
                         "/auth/**",
