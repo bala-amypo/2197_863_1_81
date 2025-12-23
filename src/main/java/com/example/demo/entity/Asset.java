@@ -1,63 +1,57 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(
-    name = "assets",
-    uniqueConstraints = @UniqueConstraint(columnNames = "assetTag")
+        name = "assets",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = "assetTag")
+        }
 )
-public class Asset
-{
+public class Asset {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @NotBlank(message = "Asset tag is required")
+    @Column(nullable = false, unique = true)
     private String assetTag;
 
+    @NotBlank(message = "Asset type is required")
     @Column(nullable = false)
     private String assetType;
 
+    @NotBlank(message = "Model is required")
+    @Column(nullable = false)
     private String model;
 
+    @NotNull(message = "Purchase date is required")
+    @Column(nullable = false)
     private LocalDate purchaseDate;
 
+    @Column(nullable = false)
     private String status;
 
     @ManyToOne
-    @JoinColumn(name = "current_holder")
+    @JoinColumn(name = "current_holder_id")
     private User currentHolder;
 
     private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "asset")
-    private List<LifecycleEvent> lifecycleEvents;
-
-    @OneToMany(mappedBy = "asset")
-    private List<TransferRecord> transferRecords;
-
-    @OneToOne(mappedBy = "asset")
-    private DisposalRecord disposalRecord;
-
-    public Asset()
-    {
+    public Asset() {
     }
 
-    public Asset(
-            String assetTag,
-            String assetType,
-            String model,
-            LocalDate purchaseDate,
-            String status,
-            User currentHolder,
-            LocalDateTime createdAt
-    )
-    {
+    public Asset(Long id, String assetTag, String assetType, String model,
+                 LocalDate purchaseDate, String status,
+                 User currentHolder, LocalDateTime createdAt) {
+        this.id = id;
         this.assetTag = assetTag;
         this.assetType = assetType;
         this.model = model;
@@ -68,96 +62,76 @@ public class Asset
     }
 
     @PrePersist
-    public void prePersist()
-    {
-        if (this.status == null)
-        {
+    public void prePersist() {
+        if (this.status == null) {
             this.status = "AVAILABLE";
         }
-
-        if (this.createdAt == null)
-        {
+        if (this.createdAt == null) {
             this.createdAt = LocalDateTime.now();
         }
     }
 
-    public Long getId()
-    {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Long id)
-    {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public String getAssetTag()
-    {
+    public String getAssetTag() {
         return assetTag;
     }
 
-    public void setAssetTag(String assetTag)
-    {
+    public void setAssetTag(String assetTag) {
         this.assetTag = assetTag;
     }
 
-    public String getAssetType()
-    {
+    public String getAssetType() {
         return assetType;
     }
 
-    public void setAssetType(String assetType)
-    {
+    public void setAssetType(String assetType) {
         this.assetType = assetType;
     }
 
-    public String getModel()
-    {
+    public String getModel() {
         return model;
     }
 
-    public void setModel(String model)
-    {
+    public void setModel(String model) {
         this.model = model;
     }
 
-    public LocalDate getPurchaseDate()
-    {
+    public LocalDate getPurchaseDate() {
         return purchaseDate;
     }
 
-    public void setPurchaseDate(LocalDate purchaseDate)
-    {
+    public void setPurchaseDate(LocalDate purchaseDate) {
         this.purchaseDate = purchaseDate;
     }
 
-    public String getStatus()
-    {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(String status)
-    {
+    public void setStatus(String status) {
         this.status = status;
     }
 
-    public User getCurrentHolder()
-    {
+    public User getCurrentHolder() {
         return currentHolder;
     }
 
-    public void setCurrentHolder(User currentHolder)
-    {
+    public void setCurrentHolder(User currentHolder) {
         this.currentHolder = currentHolder;
     }
 
-    public LocalDateTime getCreatedAt()
-    {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt)
-    {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 }
