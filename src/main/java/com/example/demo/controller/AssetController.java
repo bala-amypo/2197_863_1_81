@@ -2,13 +2,15 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.Asset;
 import com.example.demo.service.AssetService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/assets")
+@RequestMapping("/assets")
 public class AssetController {
 
     private final AssetService assetService;
@@ -18,8 +20,8 @@ public class AssetController {
     }
 
     @PostMapping
-    public ResponseEntity<Asset> createAsset(@RequestBody Asset asset) {
-        return ResponseEntity.ok(assetService.createAsset(asset));
+    public ResponseEntity<Asset> createAsset(@Valid @RequestBody Asset asset) {
+        return new ResponseEntity<>(assetService.createAsset(asset), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
@@ -32,10 +34,11 @@ public class AssetController {
         return ResponseEntity.ok(assetService.getAllAssets());
     }
 
-    @PatchMapping("/{id}/status")
-    public ResponseEntity<Asset> updateStatus(@PathVariable Long id,
-                                              @RequestParam String status) {
+    @PutMapping("/{id}/status")
+    public ResponseEntity<Asset> updateStatus(
+            @PathVariable Long id,
+            @RequestParam String status) {
+
         return ResponseEntity.ok(assetService.updateStatus(id, status));
     }
-
 }
