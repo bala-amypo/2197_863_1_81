@@ -1,8 +1,6 @@
 package com.example.demo.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,16 +14,13 @@ import com.example.demo.service.UserService;
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final AuthenticationManager authenticationManager;
     private final UserService userService;
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
 
-    public AuthController(AuthenticationManager authenticationManager,
-                          UserService userService,
+    public AuthController(UserService userService,
                           JwtUtil jwtUtil,
                           PasswordEncoder passwordEncoder) {
-        this.authenticationManager = authenticationManager;
         this.userService = userService;
         this.jwtUtil = jwtUtil;
         this.passwordEncoder = passwordEncoder;
@@ -44,21 +39,17 @@ public class AuthController {
         return ResponseEntity.ok(userService.registerUser(user));
     }
 
-    // ✅ LOGIN
+    // 🔥 FINAL SAFE LOGIN (NO SPRING SECURITY AUTH)
     @PostMapping("/login")
-public ResponseEntity<String> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<String> login(@RequestBody LoginRequest request) {
 
-    authenticationManager.authenticate(
-        new UsernamePasswordAuthenticationToken(
-            request.getEmail(),
-            request.getPassword()
-        )
-    );
+        User user = userService.getUserByEmail(request.getEmail());
 
-    User user = userService.getUserByEmail(request.getEmail());
-    String token = jwtUtil.generateTokenForUser(user);
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new RuntimeException("Invalid credentials");
+        }
 
-    return ResponseEntity.ok(token);
-}
-
+        String token = jwtUtil.generateTokenForUser(user);
+        return ResponseEntity.ok(token);
+    }
 }
