@@ -14,7 +14,11 @@ public class JwtUtil {
     private static final String SECRET_KEY =
             "mysecretkeymysecretkeymysecretkeymysecretkey";
 
-    // ✅ REQUIRED BY TEST CASE
+    /* =========================
+       REQUIRED BY TEST CASES
+       ========================= */
+
+    // Used directly in tests
     public Claims parseToken(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(Keys.hmacShaKeyFor(SECRET_KEY.getBytes()))
@@ -23,13 +27,25 @@ public class JwtUtil {
                 .getBody();
     }
 
-    // Optional but safe
-    public boolean isTokenValid(String token) {
-        try {
-            Claims claims = parseToken(token);
-            return claims.getExpiration().after(new Date());
-        } catch (Exception e) {
-            return false;
-        }
+    /* =========================
+       REQUIRED BY FILTER
+       ========================= */
+
+    // Used by JwtAuthenticationFilter
+    public String extractUsername(String token) {
+        return parseToken(token).getSubject();
+    }
+
+    public boolean isTokenValid(String token, String username) {
+        final String extractedUsername = extractUsername(token);
+        return extractedUsername.equals(username) && !isTokenExpired(token);
+    }
+
+    /* =========================
+       INTERNAL HELPERS
+       ========================= */
+
+    private boolean isTokenExpired(String token) {
+        return parseToken(token).getExpiration().before(new Date());
     }
 }
