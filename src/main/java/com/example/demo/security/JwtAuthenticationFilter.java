@@ -27,14 +27,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     // ✅ IMPORTANT: Skip JWT for auth + swagger
+ 
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) {
-        String path = request.getServletPath();
-        return path.startsWith("/auth/")
-                || path.startsWith("/swagger-ui/")
-                || path.startsWith("/v3/api-docs")
-                || path.equals("/swagger-ui.html");
-    }
+protected boolean shouldNotFilter(HttpServletRequest request) {
+    String path = request.getServletPath();
+    return path.equals("/")
+            || path.startsWith("/auth/")
+            || path.startsWith("/swagger-ui/")
+            || path.startsWith("/v3/api-docs")
+            || path.equals("/swagger-ui.html");
+}
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,

@@ -21,13 +21,11 @@ public class SecurityConfig {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
-    // ✅ REQUIRED FOR UserService + AuthController
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // ✅ REQUIRED FOR AuthController LOGIN
     @Bean
     public AuthenticationManager authenticationManager(
             AuthenticationConfiguration configuration) throws Exception {
@@ -40,11 +38,13 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
+                // 🔓 VERY IMPORTANT (THIS FIXES YOUR 403)
                 .requestMatchers(
+                        "/",
                         "/auth/**",
                         "/swagger-ui/**",
-                        "/v3/api-docs/**",
-                        "/swagger-ui.html"
+                        "/swagger-ui.html",
+                        "/v3/api-docs/**"
                 ).permitAll()
                 .anyRequest().authenticated()
             )
