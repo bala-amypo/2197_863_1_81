@@ -41,15 +41,23 @@ public class AuthController {
 
     // 🔥 FINAL SAFE LOGIN (NO SPRING SECURITY AUTH)
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequest request) {
+   @PostMapping("/login")
+public ResponseEntity<?> login(@RequestBody LoginRequest request) {
 
+    try {
         User user = userService.getUserByEmail(request.getEmail());
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new RuntimeException("Invalid credentials");
+            return ResponseEntity.status(401).body("Invalid credentials");
         }
 
         String token = jwtUtil.generateTokenForUser(user);
         return ResponseEntity.ok(token);
+
+    } catch (Exception e) {
+        // 🔥 THIS PREVENTS 500 ERROR
+        return ResponseEntity.status(401).body("Invalid credentials");
     }
+}
+
 }
