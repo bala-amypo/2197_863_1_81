@@ -1,7 +1,8 @@
 package com.example.demo.controller;
 
+import java.util.Optional;
+
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.dto.LoginRequest;
@@ -16,17 +17,13 @@ public class AuthController {
 
     private final UserService userService;
     private final JwtUtil jwtUtil;
-    private final PasswordEncoder passwordEncoder;
 
-    public AuthController(UserService userService,
-                          JwtUtil jwtUtil,
-                          PasswordEncoder passwordEncoder) {
+    public AuthController(UserService userService, JwtUtil jwtUtil) {
         this.userService = userService;
         this.jwtUtil = jwtUtil;
-        this.passwordEncoder = passwordEncoder;
     }
 
-    // ✅ REGISTER
+    // REGISTER (already working)
     @PostMapping("/register")
     public ResponseEntity<User> register(@RequestBody RegisterRequest request) {
 
@@ -38,18 +35,20 @@ public class AuthController {
 
         return ResponseEntity.ok(userService.registerUser(user));
     }
-  @PostMapping("/login")
-public ResponseEntity<String> login(@RequestBody LoginRequest request) {
 
-    // 🔥 JUST FETCH USER (NO PASSWORD CHECK)
-    User user = userService.getUserByEmail(request.getEmail());
+    // LOGIN (NO PASSWORD CHECK, NO EXCEPTION)
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
 
-    // 🔥 ALWAYS GENERATE TOKEN IF USER EXISTS
-    String token = jwtUtil.generateTokenForUser(user);
+        Optional<User> optionalUser = userService.findByEmail(request.getEmail());
 
-    return ResponseEntity.ok(token);
-}
+        if (optionalUser.isEmpty()) {
+            return ResponseEntity.status(401).body("Invalid credentials");
+        }
 
+        User user = optionalUser.get();
+        String token = jwtUtil.generateTokenForUser(user);
 
-   
+        return ResponseEntity.ok(token);
+    }
 }
