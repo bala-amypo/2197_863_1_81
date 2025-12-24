@@ -93,4 +93,12 @@ public class LifecycleEvent {
     public void setPerformedBy(User performedBy) {
         this.performedBy = performedBy;
     }
+
+    // ✅ REQUIRED FOR TEST CASES
+    @PrePersist
+    public void prePersist() {
+        if (this.eventDate == null) {
+            this.eventDate = LocalDateTime.now();
+        }
+    }
 }
