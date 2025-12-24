@@ -30,7 +30,6 @@ public class LifecycleEventServiceImpl implements LifecycleEventService {
 
     @Override
     public LifecycleEvent logEvent(Long assetId, Long userId, LifecycleEvent event) {
-
         Asset asset = assetRepository.findById(assetId)
                 .orElseThrow(() -> new ResourceNotFoundException("Asset not found"));
 
@@ -40,14 +39,12 @@ public class LifecycleEventServiceImpl implements LifecycleEventService {
         if (event.getEventType() == null) {
             throw new ValidationException("Event type is required");
         }
-
         if (event.getEventDescription() == null || event.getEventDescription().isEmpty()) {
             throw new ValidationException("Event description is required");
         }
 
         event.setAsset(asset);
         event.setPerformedBy(user);
-
         return lifecycleEventRepository.save(event);
     }
 

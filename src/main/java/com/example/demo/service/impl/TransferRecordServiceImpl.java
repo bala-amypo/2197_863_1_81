@@ -31,28 +31,24 @@ public class TransferRecordServiceImpl implements TransferRecordService {
 
     @Override
     public TransferRecord createTransfer(Long assetId, TransferRecord record) {
-
         Asset asset = assetRepository.findById(assetId)
                 .orElseThrow(() -> new ResourceNotFoundException("Asset not found"));
 
         User approver = userRepository.findById(record.getApprovedBy().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        if (!"ADMIN".equalsIgnoreCase(approver.getRole())) {
+        if (!"ADMIN".equals(approver.getRole())) {
             throw new ValidationException("Approver must be ADMIN");
         }
-
         if (record.getFromDepartment().equals(record.getToDepartment())) {
-            throw new ValidationException("From and To departments must differ");
+            throw new ValidationException("Departments must differ");
         }
-
         if (record.getTransferDate().isAfter(LocalDate.now())) {
             throw new ValidationException("Transfer date cannot be in the future");
         }
 
         record.setAsset(asset);
         record.setApprovedBy(approver);
-
         return transferRecordRepository.save(record);
     }
 

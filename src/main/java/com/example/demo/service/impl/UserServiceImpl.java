@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
+@Service   // ✅ THIS WAS MISSING
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -22,37 +22,21 @@ public class UserServiceImpl implements UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-@Override
-public User registerUser(User user) {
-
-    if (userRepository.existsByEmail(user.getEmail())) {
-        throw new ValidationException("Email already in use");
-    }
-
-    if (user.getPassword() == null || user.getPassword().length() < 8) {
-        throw new ValidationException("Password must be at least 8 characters");
-    }
-
-    if (user.getDepartment() == null) {
-        throw new ValidationException("Department is required");
-    }
-
-    // 🔥 THIS WAS MISSING / WRONG
-    user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-    if (user.getRole() == null) {
-        user.setRole("USER");
-    }
-
-    return userRepository.save(user);
-}
-
     @Override
-public User getUserByEmail(String email) {
-    return userRepository.findByEmail(email)
-            .orElseThrow(() -> new RuntimeException("User not found"));
-}
+    public User registerUser(User user) {
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new ValidationException("Email already in use");
+        }
+        if (user.getPassword() == null || user.getPassword().length() < 8) {
+            throw new ValidationException("Password must be at least 8 characters");
+        }
+        if (user.getDepartment() == null) {
+            throw new ValidationException("Department is required");
+        }
 
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return userRepository.save(user);
+    }
 
     @Override
     public User getUser(Long id) {
